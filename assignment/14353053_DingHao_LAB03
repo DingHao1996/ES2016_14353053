@@ -1,0 +1,56 @@
+#Lab3 DOL实例分析&编程
+
+## 实验任务
+####  1. 修改example2，让3个square模块变成2个, tips:修改xml的iterator
+####  2. 修改example1，使其输出3次方数，tips:修改square.c
+
+## 实验步骤
+### Example1:
+#### 找到example1文件夹，打开square.c文件，找到平方运算的代码如下：
+```c
+if (p->local->index < p->local->len) {
+    DOL_read((void*)PORT_IN, &i, sizeof(float), p);
+    i = i*i;
+    DOL_write((void*)PORT_OUT, &i, sizeof(float), p);
+    p->local->index++;
+}
+```
+#### 代码分析如下：
+#### p->local->index是指当前的位置，该值被初始化为0；
+#### p->local->len为生产者的长度；
+#### 如果满足当前位置小于生产者的长度，就对变量i进行平方运算。
+
+#### 根据题目要求，我们只需要将平方运算改为立方运算即可，如下：
+```c
+if (p->local->index < p->local->len) {
+    DOL_read((void*)PORT_IN, &i, sizeof(float), p);
+    i = i*i*i;
+    DOL_write((void*)PORT_OUT, &i, sizeof(float), p);
+    p->local->index++;
+}
+```
+#### 代码修改后运行结果如图：
+![lab3_result1](https://cloud.githubusercontent.com/assets/17469236/20212035/1489ff04-a83c-11e6-92ac-88bab00055d2.png)
+#### 可以看到输出的结果已经由之前的从0到19每个数字的平方变成了立方，符合要求。
+
+
+### Example2:
+#### 找到example2文件夹，打开xml文件，找到定义模块数量的代码如下：
+```
+<variable value="3" name="N"/>  
+```
+#### 代码定义了三个模块，而实验要求中要求我们输出两个模块，所以我们只需要将value的值改为2即可，如下：
+```
+<variable value="2" name="N"/>  
+```
+
+#### 代码修改后运行，dot结果如图：
+![lab3_result2](https://cloud.githubusercontent.com/assets/17469236/20212044/259b9492-a83c-11e6-970c-b6c3f9cab8d5.png)
+#### 可以看到dot中的模块已经由之前的三个变成了两个，符合要求。
+
+
+## 实验感想
+* 这一次实验难度并不大，只需要按照实验文档一步一步理解代码，做一些小改动即可实现实验目标；
+* 在修改文件的时候会而被提醒说无法修改文件，经过询问同学之后发现是没有获取权限，使用sudo指令获取权限后即可修改成功；
+* 在运行example2的时候没有搞清楚运行的位置，直接去找了examples文件夹，导致最后编译错误，最后发现直接在main文件夹即可运行；
+* 最后就是实验教程需要认真阅读，不要漏掉每一句关键的话，不然就有可能导致最终结果的错误。
